@@ -41,9 +41,13 @@
  */
 
 /**
+ * This file was modified by Jongho Kim, May 13, 2016.
+ */
+
+/**
  * @file
- * Declaration of a LRU tag store.
- * The LRU tags guarantee that the true least-recently-used way in
+ * Declaration of a FIFO tag store.
+ * The FIFO tags guarantee that the way inserted earliest in
  * a set will always be evicted.
  */
 

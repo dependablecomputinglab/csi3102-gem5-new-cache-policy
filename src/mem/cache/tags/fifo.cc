@@ -41,8 +41,12 @@
  */
 
 /**
+ * This file was modified by Jongho Kim, May 13, 2016.
+ */
+
+/**
  * @file
- * Definitions of a LRU tag store.
+ * Definitions of a FIFO tag store.
  */
 
 #include "debug/CacheRepl.hh"
