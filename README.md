@@ -15,13 +15,20 @@ $ cp .vimrc ~/
 $ cp -R .vim ~/
 ```
 
-##Modify These Files
+##How to copy source code in this repository
+```shell
+$ git clone csi3102-gem5-new-cache-policy 
+$ cp -rf csi3102-gem5-new-cache-policy/* gem5/
+```
+
+##Example: Implementing FIFO in _gem5_
+###1. Modify These Files
 - `src/mem/cache/Cache.py`
 ```Python
 ...
 
 #tags = Param.BaseTags(LRU(), "Tag store (replacement policy)")
-tags = Param.BaseTags(MyRepl(), "Tag store (replacement policy)")
+tags = Param.BaseTags(Fifo(), "Tag store (replacement policy)")
 
 ...
 ```
@@ -30,8 +37,8 @@ tags = Param.BaseTags(MyRepl(), "Tag store (replacement policy)")
 ```C++
 ...
 
-//#include "mem/cache/tags/lru.hh"
-#include "mem/cache/tags/my_repl.hh"
+#include "mem/cache/tags/lru.hh"
+#include "mem/cache/tags/fifo.hh"
 
 ...
 ```
@@ -40,19 +47,94 @@ tags = Param.BaseTags(MyRepl(), "Tag store (replacement policy)")
 ```Python
 ...
 
-#class LRU(BaseSetAssoc):
-#    type = 'LRU'
-#    cxx_class = 'LRU'
-#    cxx_header = "mem/cache/tags/lru.hh"
+class LRU(BaseSetAssoc):
+    type = 'LRU'
+    cxx_class = 'LRU'
+    cxx_header = "mem/cache/tags/lru.hh"
 
-class MyRepl(BaseSetAssoc):
-    type = 'MyRepl'
-    cxx_class = 'MyRepl'
-    cxx_header = "mem/cache/tags/my_repl.hh"
+class Fifo(BaseSetAssoc):
+    type = 'Fifo'
+    cxx_class = 'Fifo'
+    cxx_header = "mem/cache/tags/fifo.hh"
 
 ...
 ```
 
+- `src/mem/cache/tags/SConscript`
+```Python
+...
+
+Source('lru.cc')
+Source('fifo.cc')
+
+...
+```
+
+###2. Create These Files
+FIFO is similar to LRU.
+
+- `src/mem/cache/tags/fifo.hh` will look like:
+```C++
+//#ifndef __MEM_CACHE_TAGS_LRU_HH__
+//#define __MEM_CACHE_TAGS_LRU_HH__
+#ifndef __MEM_CACHE_TAGS_FIFO_HH__
+#define __MEM_CACHE_TAGS_FIFO_HH__
+
+//#include "params/LRU.hh"
+#include "params/Fifo.hh"
+
+//class LRU : public BaseSetAssoc
+class Fifo : public BaseSetAssoc
+{
+    public:
+        /** Convenience typedef. */
+        //typedef LRUParams Params;
+        typedef FifoParams Params;
+ 
+        /**
+         * Construct and initialize this tag store.
+         */
+        //LRU(const Params *p);
+        Fifo(const Params *p);
+
+    
+        /**
+         * Destructor
+         */
+        //~LRU() {}
+        ~Fifo() {}
+
+        ...
+}
+
+//#endif // __MEM_CACHE_TAGS_LRU_HH__
+#endif // __MEM_CACHE_TAGS_FIFO_HH__
+```
+
+- `src/mem/cache/tags/fifo.cc`
+```C++
+...
+
+//#include "mem/cache/tags/lru.hh
+#include "mem/cache/tags/fifo.hh
+
+...
+
+Fifo*
+FifoParams::create()
+{
+    return new Fifo(this);
+}
+
+...
+```
+
+###3. Rebuild
+```shell
+$ scons build/ARM/gem5.opt
+```
+
+##Insert new statistic in _gem5_
 - `src/mem/cache/tags/base.hh`
 ```C++
 ...
@@ -97,74 +179,4 @@ BaseTags::regStats()
 ...
 ```
 
-- `src/mem/cache/tags/SConscript`
-```Python
-...
-
-#Source('lru.cc')
-Source('my_repl.cc')
-
-...
-```
-
-##Create These Files
-- `src/mem/cache/tags/my_repl.hh`
-```C++
-//#ifndef __MEM_CACHE_TAGS_LRU_HH__
-//#define __MEM_CACHE_TAGS_LRU_HH__
-#ifndef __MEM_CACHE_TAGS_MYREPL_HH__
-#define __MEM_CACHE_TAGS_MYREPL_HH__
-
-//#include "params/LRU.hh"
-#include "params/MyRepl.hh"
-
-//class LRU : public BaseSetAssoc
-class MyRepl : public BaseSetAssoc
-{
-    public:
-        /** Convenience typedef. */
-        //typedef LRUParams Params;
-        typedef MyReplParams Params;
- 
-        /**
-         * Construct and initialize this tag store.
-         */
-        //LRU(const Params *p);
-        MyRepl(const Params *p);
-
-    
-        /**
-         * Destructor
-         */
-        //~LRU() {}
-        ~MyRepl() {}
-
-        ...
-}
-
-//#endif // __MEM_CACHE_TAGS_LRU_HH__
-#endif // __MEM_CACHE_TAGS_MYREPL_HH__
-```
-
-- `src/mem/cache/tags/my_repl.cc`
-```C++
-...
-
-//#include "mem/cache/tags/lru.hh
-#include "mem/cache/tags/my_repl.hh
-
-...
-
-MyRepl*
-MyReplParams::create()
-{
-    return new MyRepl(this);
-}
-
-...
-```
-
-##Rebuild
-```shell
-$ scons build/ARM/gem5.opt
-```
+If you open the file '_stats.txt_', you can see new stat 'myCustomStat' is inserted.
