@@ -81,8 +81,3 @@ class Fifo(BaseSetAssoc):
     type = 'Fifo'
     cxx_class = 'Fifo'
     cxx_header = "mem/cache/tags/fifo.hh"
-
-class Srrip(BaseSetAssoc):
-    type = 'Srrip'
-    cxx_class = 'Srrip'
-    cxx_header = "mem/cache/tags/srrip.hh"

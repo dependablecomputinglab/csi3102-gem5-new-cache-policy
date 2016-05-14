@@ -72,7 +72,6 @@ class BaseCache(MemObject):
 
     #tags = Param.BaseTags(LRU(), "Tag store (replacement policy)")
     tags = Param.BaseTags(Fifo(), "Tag store (replacement policy)")
-    #tags = Param.BaseTags(Srrip(), "Tag store (replacement policy)")
     
     sequential_access = Param.Bool(False,
         "Whether to access tags and data sequentially")
