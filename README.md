@@ -72,7 +72,7 @@ Source('fifo.cc')
 
 ###2. Create These Files
 FIFO is similar to LRU. <br />
-___TIP___ __Just focus on difference in the function accessBlock()__
+___Just focus on difference in the function accessBlock()___
 
 - `src/mem/cache/tags/fifo.hh` will look like:
 ```C++
