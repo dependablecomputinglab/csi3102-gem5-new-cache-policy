@@ -61,11 +61,6 @@ class BaseSetAssoc(BaseTags):
     sequential_access = Param.Bool(Parent.sequential_access,
         "Whether to access tags and data sequentially")
 
-class Fifo(BaseSetAssoc):
-    type = 'Fifo'
-    cxx_class = 'Fifo'
-    cxx_header = "mem/cache/tags/fifo.hh"
-
 class RandomRepl(BaseSetAssoc):
     type = 'RandomRepl'
     cxx_class = 'RandomRepl'
@@ -75,3 +70,19 @@ class FALRU(BaseTags):
     type = 'FALRU'
     cxx_class = 'FALRU'
     cxx_header = "mem/cache/tags/fa_lru.hh"
+
+class LRU(BaseTags):
+    type = 'LRU'
+    cxx_class = 'LRU'
+    cxx_header = "mem/cache/tags/lru.hh"
+
+
+class Fifo(BaseSetAssoc):
+    type = 'Fifo'
+    cxx_class = 'Fifo'
+    cxx_header = "mem/cache/tags/fifo.hh"
+
+class Srrip(BaseSetAssoc):
+    type = 'Srrip'
+    cxx_class = 'Srrip'
+    cxx_header = "mem/cache/tags/srrip.hh"

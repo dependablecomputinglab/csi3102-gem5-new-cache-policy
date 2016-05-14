@@ -70,7 +70,8 @@ class BaseCache(MemObject):
     prefetch_on_access = Param.Bool(False,
          "Notify the hardware prefetcher on every access (not just misses)")
 
-    tags = Param.BaseTags(Fifo(), "Tag store (replacement policy)")
+    #tags = Param.BaseTags(LRU(), "Tag store (replacement policy)")
+    tags = Param.BaseTags(Srrip(), "Tag store (replacement policy)")
     
     sequential_access = Param.Bool(False,
         "Whether to access tags and data sequentially")
